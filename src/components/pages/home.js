@@ -1,9 +1,12 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import { Cars } from "../cars";
+import { GlobalContext } from "../../context/GlobalState";
 import { useAuth0 } from "@auth0/auth0-react";
 
 export const Home = () => {
   const { loginWithRedirect, logout, user, isAuthenticated } = useAuth0();
+
+  const { cars, getCars } = useContext(GlobalContext);
 
   return (
     <div>
@@ -12,6 +15,7 @@ export const Home = () => {
       <button onClick={() => logout({ returnTo: window.location.origin })}>
         Log Out
       </button>
+      <button onClick={() => getCars()}>GetCars</button>
       {isAuthenticated && <h1>User: {user.name}</h1>}
 
       <div className="container">

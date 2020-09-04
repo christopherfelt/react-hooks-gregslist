@@ -1,6 +1,7 @@
 import React, { createContext, useReducer } from "react";
 import AppReducer from "./AppReducer";
 import axios from "axios";
+import { useAuth0 } from "@auth0/auth0-react";
 
 const initialState = {
   cars: [],
@@ -20,9 +21,18 @@ export const GlobalContext = createContext(initialState);
 export const GlobalProvider = ({ children }) => {
   const [state, dispatch] = useReducer(AppReducer, initialState);
 
+  const {} = useAuth0();
+
   async function getCars() {
     try {
-      let res = await api.get("");
+      const token = await getAccessTokenSilently();
+      const config = {
+        headers: {
+          Authorization: "Bearer " + token,
+          "Content-type": "application/json",
+        },
+      };
+      let res = await api.get("", config);
       // @ts-ignore
       dispatch({
         type: "GET_CARS",
